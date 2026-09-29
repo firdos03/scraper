@@ -431,6 +431,111 @@ function WhyChooseUsCarousel() {
   );
 }
 
+function PhotosCarousel() {
+  const slides = [
+    {
+      image:
+        "https://res.cloudinary.com/duky4du3/image/upload/v1790674383/car-scrap-large.webp",
+    },
+    {
+      image:
+        "https://res.cloudinary.com/duky4du3/image/upload/v1790674561/lead-l.webp",
+    },
+    {
+      image:
+        "https://res.cloudinary.com/duky4du3/image/upload/v1790674561/iron-l.webp",
+    },
+    {
+      image:
+        "https://res.cloudinary.com/duky4du3/image/upload/v1790672986/WhatsApp_Image_2026-09-29_at_13.48.08_1.jpg",
+    },
+      {
+      image:
+        "https://res.cloudinary.com/duky4du3/image/upload/v1790674559/bike-scrap-large.webp",
+    },  {
+      image:
+        "https://res.cloudinary.com/duky4du3/image/upload/v1790674560/transformer-large.webp",
+    },
+  ];
+
+  const [current, setCurrent] = useState(0);
+  const [paused, setPaused] = useState(false);
+  const touchStart = useRef<number | null>(null);
+
+  const next = () => setCurrent((i) => (i + 1) % slides.length);
+  const prev = () => setCurrent((i) => (i - 1 + slides.length) % slides.length);
+
+  useEffect(() => {
+    if (paused) return;
+    const timer = window.setInterval(next, 5000);
+    return () => window.clearInterval(timer);
+  }, [paused]);
+
+  const onTouchStart = (e: React.TouchEvent) => {
+    touchStart.current = e.touches[0]?.clientX ?? null;
+  };
+
+  const onTouchEnd = (e: React.TouchEvent) => {
+    if (touchStart.current === null) return;
+    const end = e.changedTouches[0]?.clientX ?? touchStart.current;
+    const distance = touchStart.current - end;
+    if (Math.abs(distance) > 50) distance > 0 ? next() : prev();
+    touchStart.current = null;
+  };
+
+  return (
+    <div
+      className="relative"
+      onMouseEnter={() => setPaused(true)}
+      onMouseLeave={() => setPaused(false)}
+      onTouchStart={onTouchStart}
+      onTouchEnd={onTouchEnd}
+    >
+      <div className="relative overflow-hidden rounded-2xl">
+        <div
+          className="flex transition-transform duration-700 ease-out"
+          style={{ transform: `translateX(-${current * 100}%)` }}
+        >
+          {slides.map((slide, index) => (
+            <article key={index} className="w-full shrink-0">
+              <div className="group bg-surface rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-shadow duration-300">
+                <div className="relative w-full h-[340px] md:h-[450px] lg:h-[500px] overflow-hidden">
+                  <img
+                    src={slide.image}
+                    alt={`Slide ${index + 1}`}
+                    draggable={false}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                  />
+
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-transparent" />
+                </div>
+              </div>
+            </article>
+          ))}
+        </div>
+      </div>
+
+      <button
+        type="button"
+        onClick={prev}
+        aria-label="Previous slide"
+        className="absolute left-3 md:left-5 top-1/2 -translate-y-1/2 z-10 w-11 h-11 md:w-12 md:h-12 rounded-full bg-white/90 backdrop-blur-sm shadow-lg flex items-center justify-center text-gray-900 hover:bg-white hover:scale-110 active:scale-95 transition-all"
+      >
+        <Icon name="chevron_left" className="text-[24px]" />
+      </button>
+
+      <button
+        type="button"
+        onClick={next}
+        aria-label="Next slide"
+        className="absolute right-3 md:right-5 top-1/2 -translate-y-1/2 z-10 w-11 h-11 md:w-12 md:h-12 rounded-full bg-white/90 backdrop-blur-sm shadow-lg flex items-center justify-center text-gray-900 hover:bg-white hover:scale-110 active:scale-95 transition-all"
+      >
+        <Icon name="chevron_right" className="text-[24px]" />
+      </button>
+    </div>
+  );
+}
+
 function OfficeScrapSection() {
   return (
     <section
@@ -441,11 +546,11 @@ function OfficeScrapSection() {
         {/* Image */}
         <div className="relative min-h-[380px] overflow-hidden rounded-2xl sm:min-h-[450px] lg:min-h-[560px]">
           <Image
-            src="https://res.cloudinary.com/duky4du3/image/uplFoad/v1790343912/WhatsApp_Image_2026-09-25_at_19.13.46.jpg"
+            src="https://res.cloudinary.com/duky4du3/image/upload/v1790677341/ChatGPT_Image_Sep_29_2026_03_52_04_PM.png"
             alt="Office renovation and relocation scrap collection"
             fill
             priority
-            className="object-cover transition-transform duration-500 hover:scale-105"
+            // className="object-cover transition-transform duration-500 hover:scale-105"
             sizes="(max-width: 1024px) 100vw, 50vw"
           />
 
@@ -528,13 +633,13 @@ function OfficeScrapSection() {
 
           {/* CTA */}
           <div className="mt-8">
-            <Link
-              href="/contact"
+            <a
+             href="tel:+91 99510 74243"
               className="inline-flex w-full items-center justify-center gap-3 rounded-lg bg-green-700 px-6 py-3.5 text-sm font-bold text-white transition-all duration-300 hover:-translate-y-0.5 hover:bg-green-800 sm:w-auto"
             >
               Get a Scrap Pickup Quote
               <span className="text-lg">→</span>
-            </Link>
+            </a>
           </div>
         </div>
       </div>
@@ -682,6 +787,11 @@ function App() {
       <main className="w-full pt-20 bg-surface">
         <div className="flex flex-col w-full">
           {/* 1. HERO */}
+          <section className="bg-surface-container-low py-space-xl border-y border-outline-variant/10 overflow-hidden">
+            <div className="max-w-7xl mx-auto px-gutter">
+              <PhotosCarousel />
+            </div>
+          </section>
           <section
             id="home"
             className="relative min-h-[820px] flex items-center bg-surface overflow-hidden pt-12 pb-24"
@@ -717,18 +827,6 @@ function App() {
                     />
                     Call Now
                   </a>
-
-                  {/* <a
-                    href="tel:+91 99510 74243"
-                    className="px-6 py-3.5 rounded-lg border-2 border-primary text-primary text-label-lg font-label-lg hover:bg-primary/5 transition-all text-center flex-1 sm:flex-none flex items-center justify-center gap-2"
-                  >
-                    <Icon
-                      name="phone_in_talk"
-                      className="text-emerald text-[20px]"
-                      style={{ fontVariationSettings: "'FILL' 1" }}
-                    />
-                    Call Now
-                  </a> */}
                 </div>
                 <div className="flex flex-col gap-space-sm pt-space-lg border-t border-outline-variant/30 w-full">
                   <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-on-surface font-medium">
@@ -756,28 +854,11 @@ function App() {
                     className="bg-cover bg-center w-full h-full"
                     style={{
                       backgroundImage:
-                        "url('https://lh3.googleusercontent.com/aida-public/AB6AXuCUYeZjVJbiq0orYFGkOTDsvK1xKdrVP-HSpB5FaA1oa8WR_OppF-FE_R4T8IdXijlEsxYB53jPsshQqaj6UvDvgnv0aAetK9dt-KcRrX9Y1vSbxVp2DlYJWt9gy0Ak97ZBbtSpyDvXHO9x65RA5i111rMPNXVDVHdpoHW0FKxtQj-H016Q0nXR9wNaGoL_F-1HRftwys7NIRBJy9u4r2vqctR-HKTGalXUOmeUbhPxaijvzqZYupgkdg')",
+                        "url('https://res.cloudinary.com/duky4du3/image/upload/v1790677170/ChatGPT_Image_Sep_29_2026_03_48_41_PM.png')",
                     }}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-charcoal/40 via-transparent to-transparent" />
-                  <div className="absolute bottom-4 left-4 right-4 p-4 rounded-xl bg-surface/90 backdrop-blur-md flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-full bg-emerald/20 flex items-center justify-center text-emerald">
-                        <Icon name="local_shipping" />
-                      </div>
-                      <div>
-                        <p className="text-sm font-headline font-bold text-on-surface">
-                          Active Today in Hyderabad
-                        </p>
-                        <p className="text-xs text-on-surface-variant">
-                          Over 45+ pickups completed
-                        </p>
-                      </div>
-                    </div>
-                    <span className="px-2.5 py-1 rounded-full bg-emerald text-on-primary text-xs font-bold">
-                      Live
-                    </span>
-                  </div>
+                
                 </div>
               </div>
             </div>
@@ -842,7 +923,7 @@ function App() {
                         href="tel:+91 99510 74243"
                         className="inline-flex items-center justify-between w-full pt-space-md border-t border-outline-variant/20 text-primary font-label-md hover:text-emerald transition-colors"
                       >
-                        <span>Call to Sell This Scrap</span>
+                        <span>Call +91 99510 74243</span>
                         <Icon name="arrow_forward" />
                       </a>
                     </div>
@@ -861,7 +942,7 @@ function App() {
                     className="bg-cover bg-center w-full h-full"
                     style={{
                       backgroundImage:
-                        "url('https://lh3.googleusercontent.com/aida-public/AB6AXuDjFUfDodt8tmkgx-UDVL5FA_1L0fjU-Ydrb-GlxoJg19-b5hXKWc61JDaLVxLrWmGmvKvS3X6hV-F_aU6VYftzYtR54TMKCOZosQqTScf6gUy9o75gOD5xbqAjtVqw84kmbuKKnQn9Ny9Jk65aIzB1LQgdWNqybpcnmF_1lpAbOsVN8I5-TZ0F8nllnmOlIAMeoU8lNv1DgfDSOwqRQkho5tckZAJteyqXzz3jSElk7mMSd7tiVhJB0w')",
+                        "url('https://res.cloudinary.com/duky4du3/image/upload/v1790679187/ChatGPT_Image_Sep_29_2026_04_22_45_PM.png')",
                     }}
                   />
                 </div>
