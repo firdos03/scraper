@@ -2,10 +2,18 @@ import './globals.css'
 import type { Metadata } from 'next'
 import { Providers } from './providers'
 
+const LOGO =
+  "https://lh3.googleusercontent.com/aida-public/AB6AXuCp53XPGayNfp_VxII2sOKE9vgP7UCOsuhtrI9DOqEd4jR1l6OtechlBYqMeUAR1emEYxxMoa5oCevdYz3H9kYlKwblR6jDqvqgomHRUJfKZMvqRVE6qzOt_027-Usk9VLmPQPphFMER9iemnNXhrVOTNYFQDacbao16yclltTFB9KU8VNmGzHtgrTotbuSJo3eTPKlC-rUdm0gpcEUC3BDcBDG_wIzHRyDmdibfWLc80yZFGTHIvK5Cw";
+
+
 export const metadata: Metadata = {
-  title: 'AB Traders | Trusted Scrap Buyers in Hyderabad',
+  title: 'AB Traders | Trusted Scrap Buyers in Hyderabad | +91 99510 74243',
   description:
     'Sell your recyclable scrap with a simple, transparent doorstep pickup process. AB Traders collects metal, electrical, vehicle, electronic and other scrap across Hyderabad.',
+    icons:{
+      icon: LOGO,
+      apple: LOGO
+    }
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
