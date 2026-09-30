@@ -69,11 +69,6 @@ const MATERIALS = [
     img: "https://lh3.googleusercontent.com/aida-public/AB6AXuDhG5ipfXkvaA33r6_0i5tpUwuBLYWB3mxPBKIDyIWMwictmwK1En0sfxWu90jI0IAH23y_OlBjTkKce1o6chgp0DC_fhJQHl9w5FFdumAqCuOvKduKhIXImxqSSgkHpEixEQsd1YJPfCWFXdaj2VZhTNgCPo4u4RdA_-bqMHXKMzjH4tg-BsiMuGlWFxZtc_HCgAfRuOZHuSnvrU4u0EjIXvBtMVvGNdQxq9NujS3cfMgxW2RcRXZ6oQ",
   },
   {
-    title: "Electric Wire Scrap",
-    desc: "Recycle unused electrical wires and cable scrap from homes and businesses.",
-    img: "https://lh3.googleusercontent.com/aida-public/AB6AXuBBomYSXed0sBVl92uQZktXpSsD7LDddejRox2j8_44G8wMTpYKU_df2j7V9lG1sUAZMR_P1pdKsyh-i8IZOWfvHasDDXvfw7zoTUCuUl_6nynGrioI0219SbPm6enMpFFI8JvsXjL1EDGexER5Ty9arkWXNU3yCzP8mA7SdmC9mhSKxI5D48WUAE-T9qXSZdenqXfN7rETuhJY9kLTc54x7n5m9rZzTPvUySXP5wM8MLfoF90XFNDpRA",
-  },
-  {
     title: "AC Scrap",
     desc: "Dispose of old air-conditioning units and eligible AC-related scrap.",
     img: "https://lh3.googleusercontent.com/aida-public/AB6AXuD6kzjc597V9BlaVlzP9R7EaPL1_t4-6gRt73RteGSEq-2NUdMeRN-BOE1kZrgT_CiVAdhIzCUOOKxBkXXhlgce4Ojr3Rrl-B8a-lCBclfduMUn7ufPVjQ0AtifIGTKGbeC4yY7MKDjTNwyE4KrbsUq53pcqNc3EBa26iMJNVIhd84l25JfO3FJ2NoKxfCwWaBspVLV-40iqk8eujxfiDhA00wiThGgvgrUjix1WnY04_1T095FACH7QA",
@@ -82,6 +77,11 @@ const MATERIALS = [
     title: "Bulk Industrial Scrap",
     desc: "Collection solutions for factories, warehouses, offices and businesses with larger quantities.",
     img: "https://lh3.googleusercontent.com/aida-public/AB6AXuDiqNtMiZbbHdOFjnHcw37aLChiFSR2nnrLVxDDn5UHSxe9TvSFPC1tb6jxi0FWcUcNDl-sKjdXR3G70_CY8ciiFRYWstItKO5Flku_iCYJItDI5nnnmqaYdS56PmFs0P4DpVcehMhaBqcWZ1XISd8OUF8s4Q5D-J0Pl3-nWocBP44j-kyouYeiEa_BN_tk3ExTxCiEfPC7fwetYsJIY_Tpj7M6jzHOs1oQYScLXgeA6tL0lCcwe3zUjg",
+  },
+  {
+    title: "Dismantling Scrap",
+    desc: "Recycle dismantling scrap from buildings, factories, offices, and commercial properties.",
+    img: "https://res.cloudinary.com/duky4du3/image/upload/v1790759804/dismainting.jpg",
   },
 ];
 
@@ -175,6 +175,7 @@ const AREAS = [
   "Begumpet",
   "Ameerpet",
   "Secunderabad",
+  "Panjagutta",
 ];
 
 const TESTIMONIALS = [
@@ -413,11 +414,10 @@ function WhyChooseUsCarousel() {
             onClick={() => setCurrent(index)}
             aria-label={`Go to ${slide.title}`}
             aria-current={current === index}
-            className={`h-2.5 rounded-full transition-all duration-300 ${
-              current === index
+            className={`h-2.5 rounded-full transition-all duration-300 ${current === index
                 ? "w-8 bg-primary"
                 : "w-2.5 bg-primary/25 hover:bg-primary/50"
-            }`}
+              }`}
           />
         ))}
       </div>
@@ -435,7 +435,7 @@ function PhotosCarousel() {
   const slides = [
     {
       image:
-        "https://res.cloudinary.com/duky4du3/image/upload/v1790674383/car-scrap-large.webp",
+        "https://res.cloudinary.com/duky4du3/image/upload/v1790760246/scrapbikehelpimh.jpg",
     },
     {
       image:
@@ -449,10 +449,11 @@ function PhotosCarousel() {
       image:
         "https://res.cloudinary.com/duky4du3/image/upload/v1790672986/WhatsApp_Image_2026-09-29_at_13.48.08_1.jpg",
     },
-      {
-      image:
-        "https://res.cloudinary.com/duky4du3/image/upload/v1790674559/bike-scrap-large.webp",
-    },  {
+    // {
+    //   image:
+    //     "https://res.cloudinary.com/duky4du3/image/upload/v1790674559/bike-scrap-large.webp",
+    // },
+    {
       image:
         "https://res.cloudinary.com/duky4du3/image/upload/v1790674560/transformer-large.webp",
     },
@@ -467,7 +468,9 @@ function PhotosCarousel() {
 
   useEffect(() => {
     if (paused) return;
+
     const timer = window.setInterval(next, 5000);
+
     return () => window.clearInterval(timer);
   }, [paused]);
 
@@ -477,9 +480,14 @@ function PhotosCarousel() {
 
   const onTouchEnd = (e: React.TouchEvent) => {
     if (touchStart.current === null) return;
+
     const end = e.changedTouches[0]?.clientX ?? touchStart.current;
     const distance = touchStart.current - end;
-    if (Math.abs(distance) > 50) distance > 0 ? next() : prev();
+
+    if (Math.abs(distance) > 50) {
+      distance > 0 ? next() : prev();
+    }
+
     touchStart.current = null;
   };
 
@@ -491,47 +499,32 @@ function PhotosCarousel() {
       onTouchStart={onTouchStart}
       onTouchEnd={onTouchEnd}
     >
-      <div className="relative overflow-hidden rounded-2xl">
+      <div className="relative overflow-hidden">
         <div
           className="flex transition-transform duration-700 ease-out"
-          style={{ transform: `translateX(-${current * 100}%)` }}
+          style={{
+            transform: `translateX(-${current * 100}%)`,
+          }}
         >
           {slides.map((slide, index) => (
             <article key={index} className="w-full shrink-0">
-              <div className="group bg-surface rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-shadow duration-300">
-                <div className="relative w-full h-[340px] md:h-[450px] lg:h-[500px] overflow-hidden">
+              <div className="group bg-surface overflow-hidden shadow-sm hover:shadow-xl transition-shadow duration-300">
+                <div className="relative w-full h-[260px] md:h-[450px] lg:h-[500px] overflow-hidden">
                   <img
                     src={slide.image}
-                    alt={`Slide ${index + 1}`}
+                    alt={`Scrap recycling image ${index + 1}`}
                     draggable={false}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                    className="w-full h-full object-contain md:object-cover bg-black group-hover:scale-105 transition-transform  duration-700
+    "
                   />
 
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-transparent pointer-events-none" />
                 </div>
               </div>
             </article>
           ))}
         </div>
       </div>
-
-      <button
-        type="button"
-        onClick={prev}
-        aria-label="Previous slide"
-        className="absolute left-3 md:left-5 top-1/2 -translate-y-1/2 z-10 w-11 h-11 md:w-12 md:h-12 rounded-full bg-white/90 backdrop-blur-sm shadow-lg flex items-center justify-center text-gray-900 hover:bg-white hover:scale-110 active:scale-95 transition-all"
-      >
-        <Icon name="chevron_left" className="text-[24px]" />
-      </button>
-
-      <button
-        type="button"
-        onClick={next}
-        aria-label="Next slide"
-        className="absolute right-3 md:right-5 top-1/2 -translate-y-1/2 z-10 w-11 h-11 md:w-12 md:h-12 rounded-full bg-white/90 backdrop-blur-sm shadow-lg flex items-center justify-center text-gray-900 hover:bg-white hover:scale-110 active:scale-95 transition-all"
-      >
-        <Icon name="chevron_right" className="text-[24px]" />
-      </button>
     </div>
   );
 }
@@ -634,7 +627,7 @@ function OfficeScrapSection() {
           {/* CTA */}
           <div className="mt-8">
             <a
-             href="tel:+91 99510 74243"
+              href="tel:+91 99510 74243"
               className="inline-flex w-full items-center justify-center gap-3 rounded-lg bg-green-700 px-6 py-3.5 text-sm font-bold text-white transition-all duration-300 hover:-translate-y-0.5 hover:bg-green-800 sm:w-auto"
             >
               Get a Scrap Pickup Quote
@@ -646,6 +639,24 @@ function OfficeScrapSection() {
     </section>
   );
 }
+
+
+  const CLOUD_NAME = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
+  const UPLOAD_PRESET = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET;
+
+  async function uploadImage(file: File): Promise<string> {
+    const fd = new FormData();
+    fd.append("file", file);
+    fd.append("upload_preset", UPLOAD_PRESET as string);
+
+    const res = await fetch(
+      `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`,
+      { method: "POST", body: fd },
+    );
+    if (!res.ok) throw new Error("Image upload failed");
+    const data = await res.json();
+    return data.secure_url as string;
+  }
 
 function App() {
   const emptyForm = {
@@ -664,6 +675,30 @@ function App() {
   const [email, setEmail] = useState("");
   const [subscribed, setSubscribed] = useState(false);
 
+  const [selectedImages, setSelectedImages] = useState<File[]>([]);
+
+  const handleImageChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const files = Array.from(e.target.files || []);
+
+    if (!files.length) return;
+
+    const imageFiles = files.filter((file) =>
+      file.type.startsWith("image/")
+    );
+
+    setSelectedImages((prev) => [...prev, ...imageFiles]);
+
+    e.target.value = "";
+  };
+
+  const removeImage = (index: number) => {
+    setSelectedImages((prev) =>
+      prev.filter((_, i) => i !== index)
+    );
+  };
+
   const handleChange = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
@@ -672,21 +707,30 @@ function App() {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const submitPickup = (e: React.FormEvent) => {
-    e.preventDefault();
-    setError("");
+ const submitPickup = async (e: React.FormEvent) => {
+  e.preventDefault();
+  setError("");
 
-    if (!form.name.trim() || !form.phone.trim()) {
-      setError("Please enter your name and phone number.");
-      return;
-    }
+  if (!form.name.trim() || !form.phone.trim()) {
+    setError("Please enter your name and phone number.");
+    return;
+  }
 
-    // Build a complete WhatsApp message from the pickup form.
+  setSubmitting(true);
+
+  // Open the tab immediately (inside the click) so popup blockers,
+  // especially on iOS Safari, don't block it after the async upload.
+  const waWindow = window.open("", "_blank");
+
+  try {
+    // Upload all selected images
+    const imageUrls = await Promise.all(selectedImages.map(uploadImage));
+
     const pickupDate = form.pickupDate
       ? new Date(`${form.pickupDate}T00:00:00`).toLocaleDateString("en-IN")
       : "Not specified";
 
-    const whatsappMessage = [
+    const lines = [
       "🔔 *New Scrap Pickup Request*",
       "",
       `👤 *Customer:* ${form.name}`,
@@ -696,21 +740,29 @@ function App() {
       `📍 *Pickup Area:* ${form.area || "Not specified"}`,
       `📅 *Preferred Pickup Date:* ${pickupDate}`,
       `📝 *Message:* ${form.message || "None"}`,
-      "",
-      "Please contact the customer to confirm the pickup.",
-    ].join("\n");
+    ];
 
-    setSubmitting(true);
+    if (imageUrls.length > 0) {
+      lines.push("", `🖼️ *Scrap Images (${imageUrls.length}):*`);
+      imageUrls.forEach((url, i) => lines.push(`${i + 1}. ${url}`));
+    }
 
-    // Free option: opens WhatsApp with the complete request pre-filled.
-    // The buyer/customer must press Send in WhatsApp.
-    const whatsappUrl = WA_LINK(whatsappMessage);
-    window.open(whatsappUrl, "_blank", "noopener,noreferrer");
+    lines.push("", "Please contact the customer to confirm the pickup.");
+
+    const url = WA_LINK(lines.join("\n"));
+    if (waWindow) waWindow.location.href = url;
+    else window.location.href = url;
 
     setSubmitted(true);
     setForm(emptyForm);
+    setSelectedImages([]);
+  } catch {
+    waWindow?.close();
+    setError("Could not upload the images. Please try again.");
+  } finally {
     setSubmitting(false);
-  };
+  }
+};
 
   const subscribe = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -858,7 +910,6 @@ function App() {
                     }}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-charcoal/40 via-transparent to-transparent" />
-                
                 </div>
               </div>
             </div>
@@ -1385,6 +1436,59 @@ function App() {
                         rows={3}
                       />
                     </div>
+
+                    <div>
+                      <label className="block text-sm font-label-md text-on-surface mb-space-xs">
+                        Scrap Images
+                      </label>
+
+                      <label className="w-full flex flex-col items-center justify-center gap-2 px-4 py-6 rounded-lg border-2 border-dashed border-outline-variant bg-surface cursor-pointer hover:border-primary transition-colors">
+                        <Icon name="photo_camera" className="text-[30px] text-primary" />
+
+                        <span className="text-sm font-medium text-on-surface">
+                          Take Photo or Upload Images
+                        </span>
+
+                        <span className="text-xs text-on-surface-variant text-center">
+                          You can select multiple photos
+                        </span>
+
+                        <input
+                          type="file"
+                          accept="image/*"
+                          capture="environment"
+                          multiple
+                          className="hidden"
+                          onChange={handleImageChange}
+                        />
+                      </label>
+
+                      {selectedImages.length > 0 && (
+                        <div className="mt-3 grid grid-cols-3 sm:grid-cols-4 gap-3">
+                          {selectedImages.map((file, index) => (
+                            <div
+                              key={`${file.name}-${index}`}
+                              className="relative aspect-square rounded-lg overflow-hidden border border-outline-variant"
+                            >
+                              <img
+                                src={URL.createObjectURL(file)}
+                                alt={`Scrap ${index + 1}`}
+                                className="w-full h-full object-cover"
+                              />
+
+                              <button
+                                type="button"
+                                onClick={() => removeImage(index)}
+                                className="absolute top-1 right-1 w-7 h-7 rounded-full bg-black/70 text-white flex items-center justify-center"
+                                aria-label={`Remove image ${index + 1}`}
+                              >
+                                ×
+                              </button>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
                     {error && (
                       <p className="text-sm text-error font-medium">{error}</p>
                     )}
@@ -1649,7 +1753,7 @@ function App() {
             <h3 className="text-sm font-bold text-white mb-4">Scrap We Buy</h3>
 
             <div className="flex flex-wrap gap-2">
-              {SERVICE_LINKS.slice(6).map((service) => (
+              {SERVICE_LINKS.map((service) => (
                 <button
                   key={service}
                   onClick={() => scrollTo("scrap-materials")}
