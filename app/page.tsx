@@ -83,6 +83,28 @@ const MATERIALS = [
     desc: "Recycle dismantling scrap from buildings, factories, offices, and commercial properties.",
     img: "https://res.cloudinary.com/duky4du3/image/upload/v1790759804/dismainting.jpg",
   },
+
+  // ---- Newly added ----
+  {
+    title: "ACP Sheet Scrap",
+    desc: "Sell used and leftover aluminium composite panel (ACP) sheets from signage, facades, cladding and interior work.",
+    img: "https://res.cloudinary.com/duky4du3/image/upload/v1792489464/acp_sheet.webp", // TODO: add ACP sheet image URL
+  },
+  {
+    title: "Stainless Steel Scrap",
+    desc: "Recycle stainless steel utensils, sheets, pipes, fittings and industrial offcuts.",
+    img: "https://res.cloudinary.com/duky4du3/image/upload/v1792489441/stainless-steel-scrap-500x500.webp", // TODO: add stainless steel image URL
+  },
+  {
+    title: "Machinery Scrap",
+    desc: "Dispose of old machines, motors, pumps, generators and industrial equipment.",
+    img: "https://res.cloudinary.com/duky4du3/image/upload/v1792489425/macjinary.jpg", // TODO: add machinery image URL
+  },
+  {
+    title: "Home Appliance Scrap",
+    desc: "Sell old refrigerators, washing machines, geysers, coolers and other household appliances.",
+    img: "https://res.cloudinary.com/duky4du3/image/upload/v1792489622/home.avif", // TODO: add appliance image URL
+  },
 ];
 
 const STEPS = [
@@ -509,17 +531,16 @@ function PhotosCarousel() {
           {slides.map((slide, index) => (
             <article key={index} className="w-full shrink-0">
               <div className="group bg-surface overflow-hidden shadow-sm hover:shadow-xl transition-shadow duration-300">
-                <div className="relative w-full h-[260px] md:h-[450px] lg:h-[500px] overflow-hidden">
-                  <img
-                    src={slide.image}
-                    alt={`Scrap recycling image ${index + 1}`}
-                    draggable={false}
-                    className="w-full h-full object-contain md:object-cover bg-black group-hover:scale-105 transition-transform  duration-700
-    "
-                  />
+            <div className="relative w-full aspect-[2/1] md:aspect-auto md:h-[450px] lg:h-[500px] overflow-hidden">
+  <img
+    src={slide.image}
+    alt={`Scrap recycling image ${index + 1}`}
+    draggable={false}
+    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+  />
 
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-transparent pointer-events-none" />
-                </div>
+  <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-transparent pointer-events-none" />
+</div>
               </div>
             </article>
           ))}
