@@ -1,7 +1,8 @@
 "use client";
 
+import TrackPhoneLink from "@/components/ui/TrackPhoneLink";
+import TrackWhatsAppLink from "@/components/ui/TrackWhatsAppLink";
 import Image from "next/image";
-import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 
 const PHONE = "919951074243";
@@ -437,8 +438,8 @@ function WhyChooseUsCarousel() {
             aria-label={`Go to ${slide.title}`}
             aria-current={current === index}
             className={`h-2.5 rounded-full transition-all duration-300 ${current === index
-                ? "w-8 bg-primary"
-                : "w-2.5 bg-primary/25 hover:bg-primary/50"
+              ? "w-8 bg-primary"
+              : "w-2.5 bg-primary/25 hover:bg-primary/50"
               }`}
           />
         ))}
@@ -531,16 +532,16 @@ function PhotosCarousel() {
           {slides.map((slide, index) => (
             <article key={index} className="w-full shrink-0">
               <div className="group bg-surface overflow-hidden shadow-sm hover:shadow-xl transition-shadow duration-300">
-            <div className="relative w-full aspect-[2/1] md:aspect-auto md:h-[450px] lg:h-[500px] overflow-hidden">
-  <img
-    src={slide.image}
-    alt={`Scrap recycling image ${index + 1}`}
-    draggable={false}
-    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-  />
+                <div className="relative w-full aspect-[2/1] md:aspect-auto md:h-[450px] lg:h-[500px] overflow-hidden">
+                  <img
+                    src={slide.image}
+                    alt={`Scrap recycling image ${index + 1}`}
+                    draggable={false}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                  />
 
-  <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-transparent pointer-events-none" />
-</div>
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-transparent pointer-events-none" />
+                </div>
               </div>
             </article>
           ))}
@@ -662,22 +663,22 @@ function OfficeScrapSection() {
 }
 
 
-  const CLOUD_NAME = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
-  const UPLOAD_PRESET = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET;
+const CLOUD_NAME = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
+const UPLOAD_PRESET = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET;
 
-  async function uploadImage(file: File): Promise<string> {
-    const fd = new FormData();
-    fd.append("file", file);
-    fd.append("upload_preset", UPLOAD_PRESET as string);
+async function uploadImage(file: File): Promise<string> {
+  const fd = new FormData();
+  fd.append("file", file);
+  fd.append("upload_preset", UPLOAD_PRESET as string);
 
-    const res = await fetch(
-      `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`,
-      { method: "POST", body: fd },
-    );
-    if (!res.ok) throw new Error("Image upload failed");
-    const data = await res.json();
-    return data.secure_url as string;
-  }
+  const res = await fetch(
+    `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`,
+    { method: "POST", body: fd },
+  );
+  if (!res.ok) throw new Error("Image upload failed");
+  const data = await res.json();
+  return data.secure_url as string;
+}
 
 function App() {
   const emptyForm = {
@@ -728,78 +729,90 @@ function App() {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
- const submitPickup = async (e: React.FormEvent) => {
-  e.preventDefault();
-  setError("");
 
-  if (!form.name.trim() || !form.phone.trim()) {
-    setError("Please enter your name and phone number.");
-    return;
-  }
+  const submitPickup = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setError('')
 
-  setSubmitting(true);
-
-  // Open the tab immediately (inside the click) so popup blockers,
-  // especially on iOS Safari, don't block it after the async upload.
-  const waWindow = window.open("", "_blank");
-
-  try {
-    // Upload all selected images
-    const imageUrls = await Promise.all(selectedImages.map(uploadImage));
-
-    const pickupDate = form.pickupDate
-      ? new Date(`${form.pickupDate}T00:00:00`).toLocaleDateString("en-IN")
-      : "Not specified";
-
-    const lines = [
-      "🔔 *New Scrap Pickup Request*",
-      "",
-      `👤 *Customer:* ${form.name}`,
-      `📞 *Phone:* ${form.phone}`,
-      `♻️ *Scrap Type:* ${form.scrapType}`,
-      `⚖️ *Approx. Quantity:* ${form.quantity || "Not specified"}`,
-      `📍 *Pickup Area:* ${form.area || "Not specified"}`,
-      `📅 *Preferred Pickup Date:* ${pickupDate}`,
-      `📝 *Message:* ${form.message || "None"}`,
-    ];
-
-    if (imageUrls.length > 0) {
-      lines.push("", `🖼️ *Scrap Images (${imageUrls.length}):*`);
-      imageUrls.forEach((url, i) => lines.push(`${i + 1}. ${url}`));
+    if (!form.name.trim() || !form.phone.trim()) {
+      setError('Please enter your name and phone number.')
+      return
     }
 
-    lines.push("", "Please contact the customer to confirm the pickup.");
+    setSubmitting(true)
 
-    const url = WA_LINK(lines.join("\n"));
-    if (waWindow) waWindow.location.href = url;
-    else window.location.href = url;
+    // Open a tab immediately to avoid popup blockers.
+    const waWindow = window.open('', '_blank')
 
-    setSubmitted(true);
-    setForm(emptyForm);
-    setSelectedImages([]);
-  } catch {
-    waWindow?.close();
-    setError("Could not upload the images. Please try again.");
-  } finally {
-    setSubmitting(false);
-  }
-};
-
-  const subscribe = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!email) return;
     try {
-      await fetch("/api/subscribe", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
-      });
-      setSubscribed(true);
-      setEmail("");
+      // Upload all selected images.
+      const imageUrls = await Promise.all(selectedImages.map(uploadImage))
+
+      const pickupDate = form.pickupDate
+        ? new Date(`${form.pickupDate}T00:00:00`).toLocaleDateString('en-IN')
+        : 'Not specified'
+
+      const lines = [
+        '🔔 *New Scrap Pickup Request*',
+        '',
+        `👤 *Customer:* ${form.name}`,
+        `📞 *Phone:* ${form.phone}`,
+        `♻️ *Scrap Type:* ${form.scrapType}`,
+        `⚖️ *Approx. Quantity:* ${form.quantity || 'Not specified'}`,
+        `📍 *Pickup Area:* ${form.area || 'Not specified'}`,
+        `📅 *Preferred Pickup Date:* ${pickupDate}`,
+        `📝 *Message:* ${form.message || 'None'}`,
+      ]
+
+      if (imageUrls.length > 0) {
+        lines.push('', `🖼️ *Scrap Images (${imageUrls.length}):*`)
+        imageUrls.forEach((url, i) => lines.push(`${i + 1}. ${url}`))
+      }
+
+      lines.push('', 'Please contact the customer to confirm the pickup.')
+
+      const url = WA_LINK(lines.join('\n'))
+
+      const openWhatsApp = () => {
+        if (waWindow && !waWindow.closed) {
+          waWindow.location.href = url
+        } else {
+          window.location.href = url
+        }
+      }
+
+      // Track the Google Ads WhatsApp conversion.
+      if (typeof window.gtag === 'function') {
+        let handled = false
+
+        const continueToWhatsApp = () => {
+          if (handled) return
+          handled = true
+          openWhatsApp()
+        }
+
+        window.gtag('event', 'conversion', {
+          send_to: 'AW-03190778/oK-fCPmjtKsdEPqRgfdE',
+          event_callback: continueToWhatsApp,
+          event_timeout: 2000,
+        })
+
+        // Fallback if the Google callback does not execute.
+        window.setTimeout(continueToWhatsApp, 2000)
+      } else {
+        openWhatsApp()
+      }
+
+      setSubmitted(true)
+      setForm(emptyForm)
+      setSelectedImages([])
     } catch {
-      /* ignore for MVP */
+      waWindow?.close()
+      setError('Could not upload the images. Please try again.')
+    } finally {
+      setSubmitting(false)
     }
-  };
+  }
 
   return (
     <div className="bg-surface font-body text-on-surface">
@@ -835,15 +848,13 @@ function App() {
             ))}
           </nav>
           <div className="flex items-center gap-space-sm">
-            <a
+            <TrackWhatsAppLink
               className="hidden sm:inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-emerald text-on-primary text-sm font-label-md hover:bg-emerald/90 transition-colors"
               href={WA_LINK("Hi AB Traders, I would like to sell my scrap.")}
-              target="_blank"
-              rel="noopener noreferrer"
             >
               <Icon name="chat" className="text-[18px]" />
               WhatsApp
-            </a>
+            </TrackWhatsAppLink>
             <button
               onClick={() => scrollTo("contact")}
               className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-primary text-on-primary text-sm font-label-md hover:bg-primary/90 transition-colors"
@@ -1153,16 +1164,14 @@ function App() {
                 >
                   Schedule Bulk Pickup
                 </button>
-                <a
+                <TrackWhatsAppLink
                   href={WA_LINK(
                     "Hi AB Traders, I have a large quantity of scrap for bulk pickup.",
                   )}
-                  target="_blank"
-                  rel="noopener noreferrer"
                   className="px-6 py-3.5 rounded-lg bg-surface/10 border border-white/30 text-white text-label-lg font-label-lg hover:bg-surface/20 transition-colors"
                 >
                   Talk to Our Team
-                </a>
+                </TrackWhatsAppLink>
               </div>
               <p className="text-xs uppercase tracking-wider text-inverse-on-surface/70 font-label-sm">
                 Commercial • Industrial • Office • Warehouse
@@ -1344,17 +1353,16 @@ function App() {
                       >
                         Submit Another Request
                       </button>
-                      <a
+                      <TrackWhatsAppLink
                         href={WA_LINK(
                           "Hi AB Traders, I just submitted a pickup request.",
                         )}
-                        target="_blank"
-                        rel="noopener noreferrer"
+
                         className="px-6 py-3 rounded-lg bg-emerald text-on-primary text-label-lg font-label-lg hover:bg-emerald/90 transition-colors inline-flex items-center gap-2"
                       >
                         <Icon name="chat" className="text-[18px]" />
                         WhatsApp Us
-                      </a>
+                      </TrackWhatsAppLink>
                     </div>
                   </div>
                 ) : (
@@ -1538,8 +1546,8 @@ function App() {
                   </p>
                 </div>
                 <div className="space-y-space-lg">
-                  <a
-                    href={`tel:+${PHONE}`}
+                  <TrackPhoneLink
+                    phone={`tel:+${PHONE}`}
                     className="flex items-center gap-space-md p-4 rounded-xl bg-surface-container-low hover:shadow-md transition-shadow"
                   >
                     <div className="w-12 h-12 rounded-xl bg-primary-container/10 text-primary flex items-center justify-center shrink-0">
@@ -1553,13 +1561,11 @@ function App() {
                         {PHONE_DISPLAY}
                       </p>
                     </div>
-                  </a>
-                  <a
+                  </TrackPhoneLink>
+                  <TrackWhatsAppLink
                     href={WA_LINK(
                       "Hi AB Traders, I have a question about selling scrap.",
                     )}
-                    target="_blank"
-                    rel="noopener noreferrer"
                     className="flex items-center gap-space-md p-4 rounded-xl bg-surface-container-low hover:shadow-md transition-shadow"
                   >
                     <div className="w-12 h-12 rounded-xl bg-emerald/10 text-emerald flex items-center justify-center shrink-0">
@@ -1576,7 +1582,7 @@ function App() {
                         {PHONE_DISPLAY}
                       </p>
                     </div>
-                  </a>
+                  </TrackWhatsAppLink>
                   <div className="flex items-center gap-space-md p-4 rounded-xl bg-surface-container-low">
                     <div className="w-12 h-12 rounded-xl bg-primary-container/10 text-primary flex items-center justify-center shrink-0">
                       <Icon name="location_on" />
@@ -1638,13 +1644,13 @@ function App() {
                 {COMPANY_DESCRIPTION}
               </p>
 
-              <a
-                href={`tel:+${PHONE}`}
+              <TrackPhoneLink
+                phone={`tel:+${PHONE}`}
                 className="inline-flex items-center gap-2 text-sm font-semibold text-white hover:text-emerald-300 transition-colors"
               >
                 <Icon name="call" className="text-emerald-400" />
                 {PHONE_DISPLAY}
-              </a>
+              </TrackPhoneLink>
             </div>
 
             {/* Company */}
@@ -1718,7 +1724,7 @@ function App() {
                 </div>
 
                 {/* Phone */}
-                <a href={`tel:+${PHONE}`} className="flex gap-3 group">
+                <TrackPhoneLink phone={`tel:+${PHONE}`} className="flex gap-3 group">
                   <div className="w-10 h-10 shrink-0 rounded-lg bg-emerald-500/10 text-emerald-400 flex items-center justify-center">
                     <Icon name="call" />
                   </div>
@@ -1730,15 +1736,13 @@ function App() {
                       {PHONE_DISPLAY}
                     </p>
                   </div>
-                </a>
+                </TrackPhoneLink>
 
                 {/* WhatsApp */}
-                <a
+                <TrackWhatsAppLink
                   href={WA_LINK(
                     "Hi AB Traders, I would like to sell my scrap.",
                   )}
-                  target="_blank"
-                  rel="noopener noreferrer"
                   className="flex gap-3 group"
                 >
                   <div className="w-10 h-10 shrink-0 rounded-lg bg-emerald-500/10 text-emerald-400 flex items-center justify-center">
@@ -1755,17 +1759,17 @@ function App() {
                       Chat With Us
                     </p>
                   </div>
-                </a>
+                </TrackWhatsAppLink>
               </div>
 
               {/* CTA */}
-              <a
-                href={`tel:+${PHONE}`}
+              <TrackPhoneLink
+                phone={`tel:+${PHONE}`}
                 className="mt-6 inline-flex items-center justify-center gap-2 w-full sm:w-auto px-5 py-3 rounded-lg bg-emerald-500 text-white text-sm font-bold hover:bg-emerald-400 transition-colors"
               >
                 <Icon name="call" />
                 Call Now
-              </a>
+              </TrackPhoneLink>
             </div>
           </div>
 
@@ -1814,22 +1818,20 @@ function App() {
 
       {/* MOBILE BOTTOM BAR */}
       <div className="fixed bottom-0 left-0 right-0 bg-surface-container-highest border-t border-outline-variant/20 py-3 px-4 flex lg:hidden items-center justify-around z-50 shadow-[0_-4px_12px_rgba(0,0,0,0.05)]">
-        <a
+        <TrackPhoneLink
           className="flex flex-col items-center text-primary"
-          href={`tel:+${PHONE}`}
+          phone={`tel:+${PHONE}`}
         >
           <Icon name="call" className="text-[22px]" />
           <span className="text-[11px] font-label-sm mt-0.5">Call Us</span>
-        </a>
-        <a
+        </TrackPhoneLink>
+        <TrackWhatsAppLink
           className="flex flex-col items-center text-emerald"
           href={WA_LINK("Hi AB Traders, I would like to sell my scrap.")}
-          target="_blank"
-          rel="noopener noreferrer"
         >
           <Icon name="chat" className="text-[22px]" />
           <span className="text-[11px] font-label-sm mt-0.5">WhatsApp</span>
-        </a>
+        </TrackWhatsAppLink>
         <button
           className="flex flex-col items-center px-4 py-1.5 rounded-lg bg-primary text-on-primary"
           onClick={() => scrollTo("contact")}
