@@ -82,8 +82,6 @@ export default function RootLayout({
         {/* Google Ads Initialization */}
         <Script id="google-ads-tag" strategy="afterInteractive">
           {`
-            console.log("GOOGLE_TAG_ID:", "${GOOGLE_TAG_ID}");
-
             window.dataLayer = window.dataLayer || [];
 
             function gtag() {
