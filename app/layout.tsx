@@ -1,4 +1,3 @@
-
 import './globals.css'
 import type { Metadata } from 'next'
 import Script from 'next/script'
@@ -27,25 +26,45 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
+        {/* Google Fonts */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
+
         <link
           rel="preconnect"
           href="https://fonts.gstatic.com"
           crossOrigin="anonymous"
         />
+
         <link
           href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap"
           rel="stylesheet"
         />
+
         <link
           href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=swap"
           rel="stylesheet"
         />
 
+        {/* Error Handler */}
         <script
           dangerouslySetInnerHTML={{
-            __html:
-              'window.addEventListener("error",function(e){if(e.error instanceof DOMException&&e.error.name==="DataCloneError"&&e.message&&e.message.includes("PerformanceServerTiming")){e.stopImmediatePropagation();e.preventDefault()}},true);',
+            __html: `
+              window.addEventListener(
+                "error",
+                function(e) {
+                  if (
+                    e.error instanceof DOMException &&
+                    e.error.name === "DataCloneError" &&
+                    e.message &&
+                    e.message.includes("PerformanceServerTiming")
+                  ) {
+                    e.stopImmediatePropagation();
+                    e.preventDefault();
+                  }
+                },
+                true
+              );
+            `,
           }}
         />
       </head>
@@ -53,18 +72,31 @@ export default function RootLayout({
       <body className="bg-surface font-body text-on-surface">
         <Providers>{children}</Providers>
 
-        {/* Google Ads tag */}
+        {/* Google Ads Global Tag */}
         <Script
+          id="google-ads-script"
           src={`https://www.googletagmanager.com/gtag/js?id=${GOOGLE_TAG_ID}`}
           strategy="afterInteractive"
         />
 
+        {/* Google Ads Initialization */}
         <Script id="google-ads-tag" strategy="afterInteractive">
           {`
+            console.log("GOOGLE_TAG_ID:", "${GOOGLE_TAG_ID}");
+
             window.dataLayer = window.dataLayer || [];
-            function gtag(){window.dataLayer.push(arguments);}
+
+            function gtag() {
+              window.dataLayer.push(arguments);
+            }
+
             gtag('js', new Date());
+
             gtag('config', '${GOOGLE_TAG_ID}');
+
+            console.log("Google Ads initialization executed");
+
+            console.log("Google Ads DataLayer:", window.dataLayer);
           `}
         </Script>
       </body>
